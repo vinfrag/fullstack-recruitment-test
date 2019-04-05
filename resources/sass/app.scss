@@ -11,9 +11,34 @@
 #app {
     header {
         background-color: $light-grey;
+
+        .form-group .form-control {
+            border: 0px;
+        }
+
+        .form-control, .btn {
+            border-radius: $box-radius;
+        }
+    }
+
+    .card {
+        border-radius: $box-radius;
     }
 
     .box-shadow {
         box-shadow: 0px 0px 10px 0px $shadow-color;
+    }
+
+    .city {
+        text-transform: capitalize;
+    }
+
+    footer {
+        padding: 20px;
+        border-top: 1px $border-color solid;
+        
+        a.is-active {
+            font-weight: bold;
+        }
     }
 }

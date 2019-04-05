@@ -20,6 +20,6 @@ class CityController extends Controller
      *  Return type : JSON
      */
     public function index () {
-        return $this->databaseRepo->getDatas()->pluck('city')->unique();
+        return $this->databaseRepo->getDatas()->pluck('city')->unique()->sort();
     }    
 }

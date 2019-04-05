@@ -31,19 +31,21 @@ class TherapistController extends Controller
      *  Return type : JSON
      */
     public function getList ($city, $practice) {
-
         // Update the data to make the test with the city and practises
-        $datas = $this->databaseRepo->getDatas()->map( function ($data, $key) {
-            $data->city = strtolower($data->city);
-            // Create new entry to add the practices slug
-            $data->practicesSlug = collect($data->practices)->map(function ($item, $key) {
-                return Str::slug($item);
-            })->toArray();
-            return $data;
-        });
+        $datas = $this->databaseRepo->getDatas()
+            ->filter(function ( $data, $key) use ($city) {
+                return $city == strtolower( $data->city);
+            })
+            ->map( function ($data, $key) {
+                // Create new entry to add the practices slug
+                $data->practicesSlug = collect($data->practices)->map(function ($item, $key) {
+                    return Str::slug($item);
+                })->toArray();
+                return $data;
+            });
 
         // Get the datas for the city and the good practice slug
-        $datas = $datas->where('city', $city)->filter( function ($item, $key) use ($practice) { 
+        $datas = $datas->filter( function ($item, $key) use ($practice) { 
             return in_array($practice, $item->practicesSlug);
         });
            

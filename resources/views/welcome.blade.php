@@ -8,13 +8,7 @@
     </head>
     <body>
         <main id="app">
-            <header class="mb-5 box-shadow">
-                <div class="mb-5">
-                    <main-component></main-component>
-                </div>
-                
-                <search-component></search-component>
-            </header>
+            <main-component></main-component>
         </main>
         <script src="{{ mix('/js/app.js') }}"></script>
     </body>

@@ -25,21 +25,38 @@ class PracticeController extends Controller
         // We get all practices array and foreach them to push the value in a new collection
         foreach ($this->databaseRepo->getDatas()->pluck('practices')->toArray() as $practises) {
             foreach ($practises as $practiceValue) {
-                $practicesCollection->push([Str::slug($practiceValue) => $practiceValue]);
+                $practicesCollection->push(['value' => Str::slug($practiceValue), 'text' => $practiceValue]);
             }
         }
 
-        return $practicesCollection;
+        return $practicesCollection->unique()->sortBy('text');
     }    
 
-    public function getList ( $city, Collection $practicesCollection){
-        // Update the data to make the test with the city
-        $datas = $this->dataWithPracticeSlug($this->databaseRepo->getDatas(), $practicesCollection)
-            ->map(function ($data, $key) {
-                $data->city = strtolower($data->city);
+
+    /********************** WIP ******/
+    public function getListByCities (Collection $practicesCollection){
+
+        $cities = $this->databaseRepo->getDatas()->pluck('city')->unique()->all();
+        foreach($cities as $city)
+        {
+            $practicesForCity = $this->databaseRepo->getDatas()->filter( function ($item, $key) use ($city) {            
+                                    return $city == $item->city;
+                                } )->pluck('practices')->unique()->toArray();
+
+            $practicesCollection->push($city);
+            $practicesCollection[$city] = new Collection();
+        
+            foreach ($practicesForCity as $practices) {
+                foreach ( $practices as $practiceValue) {
+                    $practicesCollection[$city]->push(['value' => Str::slug($practiceValue), 'text' => $practiceValue]);
+                }
             }
-        );
-            
-        return $datas;
+            $practicesCollection[$city] = $practicesCollection[$city]->unique()->sort();
+
+        }
+
+        return $practicesCollection;
     }
+
+    
 }

@@ -20,7 +20,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/cities', 'CityController@index');
 
     Route::get('/practices', 'PracticeController@index');
-    Route::get('/practices/{city}', 'PracticeController@getList');
+    Route::get('/practices-by-cities', 'PracticeController@getListByCities');
 
     Route::get('/therapists', 'TherapistController@index');
     Route::get( '/therapists/{city}/{practice}', 'TherapistController@getList');

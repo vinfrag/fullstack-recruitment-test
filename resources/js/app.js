@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -6,8 +5,25 @@
  */
 
 require('./bootstrap');
+require('./axios');
 
 window.Vue = require('vue');
+
+window.Event = new class {
+  constructor () {
+    this.vue = new Vue();
+  }
+
+  fire (event, data = null) {
+    this.vue.$emit(event, data);
+  }
+
+  listen (event, callback) {
+    this.vue.$on(event, callback);
+  }
+}
+
+Vue.prototype.$http = axios;
 
 /**
  * The following block of code may be used to automatically register your
@@ -19,6 +35,8 @@ window.Vue = require('vue');
 
 Vue.component('main-component', require('./components/MainComponent.vue'));
 Vue.component("search-component", require("./components/SearchComponent.vue"));
+Vue.component("result-component", require("./components/ResultComponent.vue"));
+Vue.component("links-component", require("./components/LinksComponent.vue"));
 
 // const files = require.context('./', true, /\.vue$/i)
 
