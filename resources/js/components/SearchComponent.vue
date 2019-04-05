@@ -84,14 +84,6 @@ export default {
                 .catch('Error catch during the process !');
         },
 
-        compare(a,b) {
-             if(a.text > b.text)
-                    return -1;
-                else if( a.text < b.text )
-                    return 1;
-                return 0;
-        },
-
         populateCities(response) {            
             let cities =  Object.keys(response.data).map((key, index) => {
                     var text = response.data[key];
@@ -99,17 +91,12 @@ export default {
                     return { value: value, text: text};
                 })
 
-            console.log(cities);
-            let rdata = [cities];
-            rdata = rdata.sort((a,b) => compare(a,b)) 
-            console.log(rdata.reverse())
-
-            this.cityOptions = this.cityOptions.concat(cities).sort((a,b) => b.value > a.value);
+            this.cityOptions = this.cityOptions.concat(cities);
             Event.fire('cities-loaded', cities);
         },
 
         populatePractices(response) {
-            let practices =  Object.keys(response.data).map(function(key, index) {
+            let practices =  Object.keys(response.data).map((key, index) => {
                     var practice = response.data[key];
                     return { value: practice['value'], text: practice['text']};
                 })
@@ -158,20 +145,6 @@ export default {
             this.practiceSelected = data.practice;
         });
     },
-
-    computed: {
-        sortedCities (){
-            var compare = function (a,b) { 
-                if(a.value > b.value)
-                    return -1;
-                else if( a.value < b.value )
-                    return 1;
-                return 0;
-            }
-
-            return [ this.cityOptions ].sort(compare);
-        }
-    }
 }
 </script>
 
