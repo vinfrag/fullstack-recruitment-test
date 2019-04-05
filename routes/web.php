@@ -16,11 +16,14 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'api'], function () {
-    Route::get('/all', 'TherapistController@collectJsonData');
-    Route::get('/cities', 'TherapistController@getCities');
-    Route::get('/practices', 'TherapistController@getPractices');
+    
+    Route::get('/cities', 'CityController@index');
 
-    Route::get('/therapists/{city}', 'TherapistController@getTherapists');
+    Route::get('/practices', 'PracticeController@index');
+    Route::get('/practices/{city}', 'PracticeController@getList');
+
+    Route::get('/therapists', 'TherapistController@index');
+    Route::get( '/therapists/{city}/{practice}', 'TherapistController@getList');
 
     
 

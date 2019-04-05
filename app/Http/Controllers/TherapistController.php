@@ -3,57 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
+use App\Http\Repositories\DatabaseRepositoryInterface;
+
 
 class TherapistController extends Controller
 {
-    protected $files;
-    protected $datas;
+    protected $databaseRepo;
 
-
-    public function __construct(Filesystem $files)
+    public function __construct(DatabaseRepositoryInterface $databaseRepositoryInterface)
     {
-        $this->files = $files;
-        $this->datas = $this->collectJsonData();
+        $this->databaseRepo = $databaseRepositoryInterface;
     }
 
     /*
-     *  Get the Json Database file, extract the content and return a Collection
-     *  Return Type: Eloquent Collection
+    *  API : Get the list of therapists
+    *  Return type : JSON
+    */
+
+    public function index()
+    {
+        return$this->databaseRepo->getDatas();
+    }
+
+     /*
+     *  API : Get the list of therapists for a city and a practice
+     *  Return type : JSON
      */
-    public function collectJsonData () {
-        // Open the json data file
-        $path = config('jsondatabase.file.path');
-        if (!$this->files->exists($path)) throw new NotFoundHttpException();
-        $fileContent = $this->files->get($path);
+    public function getList ($city, $practice) {
 
-        // Convert array extract from json file to eloquent collection 
-        $datas = collect(json_decode($fileContent));
+        // Update the data to make the test with the city and practises
+        $datas = $this->databaseRepo->getDatas()->map( function ($data, $key) {
+            $data->city = strtolower($data->city);
+            // Create new entry to add the practices slug
+            $data->practicesSlug = collect($data->practices)->map(function ($item, $key) {
+                return Str::slug($item);
+            })->toArray();
+            return $data;
+        });
 
+        // Get the datas for the city and the good practice slug
+        $datas = $datas->where('city', $city)->filter( function ($item, $key) use ($practice) { 
+            return in_array($practice, $item->practicesSlug);
+        });
+           
         return $datas;
-    }
-
-    /*
-     *  API : Get the list of cities
-     *  Return type : JSON
-     */
-    public function getCities () {
-        return $this->datas->pluck('city')->unique();
-    }
-
-    /*
-     *  API : Get the list of 
-     *  Return type : JSON
-     */
-    public function getPractices()
-    {
-        return $this->datas->pluck('practices');
-    }
-
-    public function getTherapists ($city) {
-        dd( $this->datas->where('city', $city));
-        return $this->datas->where('city', $city);
     }
     
 }
