@@ -14,3 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'api'], function () {
+    Route::get('/all', 'TherapistController@collectJsonData');
+    Route::get('/cities', 'TherapistController@getCities');
+    Route::get('/practices', 'TherapistController@getPractices');
+
+    Route::get('/therapists/{city}', 'TherapistController@getTherapists');
+
+    
+
+});

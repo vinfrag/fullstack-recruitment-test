@@ -18,6 +18,7 @@ window.Vue = require('vue');
  */
 
 Vue.component('main-component', require('./components/MainComponent.vue'));
+Vue.component("search-component", require("./components/SearchComponent.vue"));
 
 // const files = require.context('./', true, /\.vue$/i)
 
