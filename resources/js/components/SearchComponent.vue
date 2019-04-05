@@ -92,13 +92,7 @@ export default {
                 return 0;
         },
 
-        populateCities(response) {
-            console.log(response.data);
-
-            console.log([ response.data ].map((key,index) => {
-                return key;
-            }));
-            
+        populateCities(response) {            
             let cities =  Object.keys(response.data).map((key, index) => {
                     var text = response.data[key];
                     var value = text.toLowerCase()
@@ -106,7 +100,7 @@ export default {
                 })
 
             console.log(cities);
-            let rdata = cities;
+            let rdata = [cities];
             rdata = rdata.sort((a,b) => compare(a,b)) 
             console.log(rdata.reverse())
 
